@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Note Taker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.1.3/flatly/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+
+<body>
+
+        <nav class="navbar navbar-light">
+                <a class="navbar-brand mb-0 h1 text-white p-1" href="/"><img src="./assets/icon/noteicon.png" alt="note icon" class="img-thumbnail ml-3" style="height: 70px; width: 70px;"></a>
+                
+                <ul class="nav justify-content-end">
+                    <li class="nav-item">
+                      <button type="button" href="/notes" class="btn btn-link text-white"><h3><i class="fas fa-pencil-alt"></i> Create Notes</h3></button>
+                    </li>
+                </ul>
+            </nav>
+        
+            <div class="container">
+                <div class="card-body">
+                    <ul id="noteList" class="list-group">
+                        <li class="list-group-item mt-4">
+                            <h2>Saved Notes</h2>
+                            <hr>
+                            <h3></h3>
+                            <h5></h5>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="/assets/js/index.js"></script>
+</body>
+
+<script type="text/javascript">
+    function runTableQuery() {
+      $.ajax({ url: "/api/viewnote", method: "GET" })
+        .then(function(inputData) {
+          console.log(inputData);
+          console.log("------------------------------------");
+          // Loop through and display each of the customers
+          for (var i = 0; i < inputData.length; i++) {
+            // Get a reference to the tableList element and populate it with tables
+            var noteList = $("#noteList");
+            // Then display the fields in the HTML (Section Name, Date, URL)
+            var listItem = $("<li class='list-group-item mt-4'>");
+            listItem.append(
+              $("<hr>"),
+              $("<h3>").text("ID: " + inputData[i].noteTitle),
+              $("<h5>").text("Name: " + inputData[i].noteText)
+            );
+            noteList.prepend(listItem);
+          }
+        });
+    }
+    // This function resets all of the data in our tables. This is intended to let you restart a demo.
+    function clearTable() {
+      alert("Clearing...");
+      // Clear the tables on the server and then empty the elements on the client
+      $.ajax({ url: "/api/clear", method: "POST" }).then(function() {
+        $("#waitList").empty();
+        $("#tableList").empty();
+      });
+    }
+    $("#clear").on("click", clearTable);
+    // Run Queries!
+    // ==========================================
+    runTableQuery();
+    runWaitListQuery();
+  </script>
+
+</html>

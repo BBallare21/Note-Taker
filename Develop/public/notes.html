@@ -19,20 +19,17 @@
         
         <ul class="nav justify-content-end">
             <li class="nav-item">
-              <button type="button" class="btn btn-link text-white save-note"><h2><i class=" icon-5x fas fa-save"></i></h2></button>
+              <button type="button" class="btn btn-link text-white" id="saveNote"><h3><i class=" icon-5x fas fa-save"></i></h3></button>
             </li>
             <li class="nav-item">
-              <button type="button" class="btn btn-link text-white"><h2><i class="fas fa-pencil-alt"></i></h2></button>
+              <button type="button" class="btn btn-link text-white" href="/viewnote"><h3>View Notes</h3></button>
             </li>
           </ul>
     </nav>
 
     <div class="container">
         <div class="row" style="width: 100%;">
-          <div class="col-sm-3 list-container list-group" id="noteList">
-            
-          </div>
-          <div class="col-sm-9">
+          <div class="col-sm">
               <form>
                   <div class="form-group">
                     <input type="text" class="form-control note-title" id="noteTitle" placeholder="Note Title">
@@ -50,3 +47,27 @@
 </body>
 
 </html>
+
+<script type="text/javascript">
+
+  $("#saveNote").on("submit", function(event) {
+    event.preventDefault();
+    
+      let noteInto = {
+        noteTitle: $("#noteTitle").val(),
+        noteText: $("#noteText").val()
+      };
+      console.log(noteInfo)
+  
+    $.post("/api/viewnote", noteInfo,
+      function(data) {
+        
+        if (data) {
+          alert(`Note has been saved!`)
+        }
+
+        $("#noteTitle").val("");
+        $("#noteText").val("");
+      });
+  });
+</script>
