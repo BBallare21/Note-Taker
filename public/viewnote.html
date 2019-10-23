@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -88,10 +88,6 @@
   cursor: pointer;
 }
 
-.btn {
-  background-color: rgb(4, 175, 138) !important;
-}
-
 .list-container .list-group-item {
   border-left: none;
   border-right: none;
@@ -103,61 +99,58 @@
 
 <body>
 
-    <nav class="navbar navbar-light">
-        <a class="navbar-brand mb-0 h1 text-white p-1" href="/"><img src="./icon/noteicon.png" alt="note icon" class="img-thumbnail ml-3" style="height: 70px; width: 70px;"></a>
+        <nav class="navbar navbar-light">
+                <a class="navbar-brand mb-0 h1 text-white p-1" href="/"><img src="./icon/noteicon.png" alt="note icon" class="img-thumbnail ml-3" style="height: 70px; width: 70px;"></a>
+                
+                <ul class="nav justify-content-end">
+                    <li class="nav-item">
+                      <a href="/notes"><button type="button" class="btn btn-link text-white icons"><h3> Create Notes</h3></button></a>
+                    </li>
+                </ul>
+            </nav>
         
-        <ul class="nav justify-content-end">
-            <li class="nav-item">
-              <button type="submit" class="btn text-white icons saveBtn"><h3><i class="fas fa-save"></i></h3></button>
-            </li>
-            <br>
-            <li class="nav-item">
-              <a href="/viewnote"><button type="button" class="btn btn-link text-white icons"><h3>View Notes</h3></button></a>
-            </li>
-          </ul>
-    </nav>
-
-    <div class="container">
-        <div class="row" style="width: 100%;">
-          <div class="col-sm">
-              <form>
-                  <div class="form-group">
-                    <input type="text" class="form-control note-title" id="noteTitle" placeholder="Note Title">
+            <div class="container-fluid">
+                <div class="list-container">
+                  <div class="card">
+                    <ul class="list-group list-group-item">
+                    </ul>
                   </div>
-                  <div class="form-group">
-                    <textarea class="form-control note-textarea" id="noteText" rows="3" placeholder="Note Text"></textarea>
-                  </div>
-                </form>
-          </div>
-        </div>
-    </div>
-
+                </div>
+            </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="/assets/js/index.js"></script>
   <script type="text/javascript">
-
-    $(".saveBtn").on("submit", function(event) {
-      event.preventDefault();
-      
-        let noteInfo = {
-          noteTitle: $("#noteTitle").val(),
-          noteText: $("#noteText").val()
-        };
-        console.log(noteInfo)
-    
-      $.post("/api/viewnote", noteInfo,
-        function(data) {
-          
-          if (data) {
-            alert(`Note has been saved!`)
+    function noteQuery() {
+      $.ajax({ url: "/api/viewnote", method: "GET" })
+        .then(function(inputData) {
+          console.log(inputData);
+          console.log("------------------------------------");
+          // Loop through and display each of the customers
+          for (var i = 0; i < inputData.length; i++) {
+            // Get a reference to the tableList element and populate it with tables
+            var noteList = $("#noteList");
+            // Then display the fields in the HTML (Section Name, Date, URL)
+            var listItem = $("<li class='list-group-item mt-4'>");
+            listItem.append(
+              $("<hr>"),
+              $("<h3>").text("ID: " + inputData[i].noteTitle),
+              $("<h5>").text("Name: " + inputData[i].noteText)
+            );
+            noteList.prepend(listItem);
           }
-  
-          $("#noteTitle").val("");
-          $("#noteText").val("");
         });
-    });
+    }
+    function clearTable() {
+      alert("Clearing...");
+      $.ajax({ url: "/api/clear", method: "POST" }).then(function() {
+        $("#waitList").empty();
+        $("#tableList").empty();
+      });
+    }
+    $("#clear").on("click", clearTable);
+    // Run Queries!
+    // ==========================================
+    noteQuery();
   </script>
 </body>
-
 </html>
-
